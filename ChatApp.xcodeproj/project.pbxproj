@@ -19,6 +19,7 @@
 		EC42263C29BB9C6B00D0F06B /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC42263B29BB9C6B00D0F06B /* VideoPlayerViewController.swift */; };
 		EC42263E29BB9C8F00D0F06B /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC42263D29BB9C8F00D0F06B /* NewConversationViewController.swift */; };
 		EC42264029BB9CA300D0F06B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC42263F29BB9CA300D0F06B /* ProfileViewController.swift */; };
+		EC42264329BBA94900D0F06B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC42264229BBA94900D0F06B /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		EC42263B29BB9C6B00D0F06B /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		EC42263D29BB9C8F00D0F06B /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		EC42263F29BB9CA300D0F06B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		EC42264229BBA94900D0F06B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,8 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				EC42261F29BB473600D0F06B /* ConversationsViewController.swift */,
-				EC42263529BB9C2900D0F06B /* LoginViewController.swift */,
-				EC42263729BB9C3800D0F06B /* RegisterViewController.swift */,
+				EC42264129BB9E8300D0F06B /* Login */,
 				EC42263929BB9C5900D0F06B /* PhotoViewerViewController.swift */,
 				EC42263B29BB9C6B00D0F06B /* VideoPlayerViewController.swift */,
 				EC42263D29BB9C8F00D0F06B /* NewConversationViewController.swift */,
@@ -120,6 +121,7 @@
 			children = (
 				EC42261B29BB473600D0F06B /* AppDelegate.swift */,
 				EC42261D29BB473600D0F06B /* SceneDelegate.swift */,
+				EC42264229BBA94900D0F06B /* Extensions.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -131,6 +133,15 @@
 				EC42262629BB473700D0F06B /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		EC42264129BB9E8300D0F06B /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				EC42263529BB9C2900D0F06B /* LoginViewController.swift */,
+				EC42263729BB9C3800D0F06B /* RegisterViewController.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -209,6 +220,7 @@
 				EC42263E29BB9C8F00D0F06B /* NewConversationViewController.swift in Sources */,
 				EC42262029BB473600D0F06B /* ConversationsViewController.swift in Sources */,
 				EC42263C29BB9C6B00D0F06B /* VideoPlayerViewController.swift in Sources */,
+				EC42264329BBA94900D0F06B /* Extensions.swift in Sources */,
 				EC42261C29BB473600D0F06B /* AppDelegate.swift in Sources */,
 				EC42264029BB9CA300D0F06B /* ProfileViewController.swift in Sources */,
 				EC42261E29BB473600D0F06B /* SceneDelegate.swift in Sources */,
@@ -366,7 +378,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -397,7 +409,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
