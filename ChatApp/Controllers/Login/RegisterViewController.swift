@@ -16,6 +16,9 @@ class RegisterViewController: UIViewController {
         imageView.image = UIImage(systemName: "person")
         imageView.tintColor = .systemGray
         imageView.contentMode = .scaleAspectFit
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
         return imageView
     }()
     
@@ -167,6 +170,10 @@ class RegisterViewController: UIViewController {
                                  width: size,
                                  height: size)
         
+        ///adjusting the corner radius of the image
+        imageView.layer.cornerRadius = imageView.width/2.0
+        
+        
         ///adding the first & lastNameTextField
         firstNameField.frame = CGRect(x: 30,
                                       y: imageView.bottom + 20,
@@ -198,7 +205,9 @@ class RegisterViewController: UIViewController {
     
     ///the method for our gesture recognizer
     @objc private func didTapChangeProfilePic() {
+        ///here we will implement for our user the possibility to take a pic or to select from library
         print("User is trying to change the profile pic")
+        presentPhotoActionSheet()
     }
     
     
@@ -264,3 +273,59 @@ extension RegisterViewController: UITextFieldDelegate {
     }
 }
 
+///after asking for acess to camera and photo album we need to create an extension
+///and conform to the UIImagePickerControllerDelegate -> this will allow to select and take a picture
+extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    ///and we will create our function in order for the user to
+    ///select from an action sheet to take a photo or to choose a photo from library
+    func presentPhotoActionSheet() {
+        let actionSheet = UIAlertController(title: "Profile Picture", message: "How would you like to upload your profile photo?", preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        actionSheet.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { [weak self] _ in
+            //photo , weak self to prevent a memory retention loop to be created
+            self?.presentCamera()
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Select from Photos", style: .default, handler: { [weak self] _ in
+            //select , self is optional because is weak
+            self?.presentPhotos()
+        }))
+        
+        present(actionSheet, animated: true)
+    }
+    
+    ///we will create two functions that will be called inside from the handler from action sheet
+    func presentCamera() {
+        let vc = UIImagePickerController()
+        vc.sourceType = .camera
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated:  true)
+    }
+    
+    func presentPhotos() {
+        let vc = UIImagePickerController()
+        vc.sourceType = .photoLibrary
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated:  true)
+    }
+    
+    ///this is used when a user takes/selects a photo
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        //to do
+        picker.dismiss(animated: true)
+        guard let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
+            return
+        }
+        self.imageView.image = selectedImage
+        
+    }
+    ///this is used when the user finishes
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        //to do
+        picker.dismiss(animated: true)
+    }
+    
+}
