@@ -134,6 +134,10 @@ class LoginViewController: UIViewController {
     ///once the loginButton is tapped we will make some text validation
     ///
     @objc private func loginButtonTapped() {
+        ///if the login button is tapped then the email & password will resign it first responder
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+        
         guard let email = emailField.text, let password = passwordField.text,
               !email.isEmpty, !password.isEmpty, password.count >= 6 else {
             alertUserLoginError()
@@ -146,7 +150,7 @@ class LoginViewController: UIViewController {
     
     func alertUserLoginError() {
         let alert = UIAlertController(title: "Woops",
-                                      message: "Please enter all information to log in",
+                                      message: "Please enter all information to log in.",
                                       preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel))
