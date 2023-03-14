@@ -6,14 +6,16 @@
 //
 
 import UIKit
-
+///now we need to import Firebase
+import Firebase
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        ///in order to configure we need to call in the firebase app the configure method
+        FirebaseApp.configure()
         return true
     }
 
