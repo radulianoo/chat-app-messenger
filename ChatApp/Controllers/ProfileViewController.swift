@@ -8,6 +8,7 @@
 import UIKit
 //for log out we need to implement FirebaseAuth to call signOut()
 import FirebaseAuth
+import FBSDKLoginKit
 
 class ProfileViewController: UIViewController {
     //add the tableView to the UI
@@ -56,6 +57,10 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
             guard let strongSelf = self else {
                 return
             }
+            
+            
+            //Log Out facebook
+            FBSDKLoginKit.LoginManager().logOut()
             
             do {
                 //log out the user
