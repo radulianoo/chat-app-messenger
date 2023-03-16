@@ -8,6 +8,8 @@
 import UIKit
 //now that we created our first user and created it , when the user opens the app it should be on this loginVC
 import FirebaseAuth
+//import FacebookLoginKit
+import FBSDKLoginKit
 
 class LoginViewController: UIViewController {
     
@@ -30,7 +32,7 @@ class LoginViewController: UIViewController {
     
     ///email textField
     private let emailField: UITextField = {
-       let field = UITextField()
+        let field = UITextField()
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .continue
@@ -49,7 +51,7 @@ class LoginViewController: UIViewController {
     
     ///password textField
     private let passwordField: UITextField = {
-       let field = UITextField()
+        let field = UITextField()
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .done
@@ -78,9 +80,13 @@ class LoginViewController: UIViewController {
         
         return button
     }()
-   
     
     
+    private let fbLoginButton: FBLoginButton = {
+        let button = FBLoginButton()
+        button.permissions = ["public_profile", "email"]
+        return button
+    }()
     
     
     override func viewDidLoad() {
@@ -97,6 +103,7 @@ class LoginViewController: UIViewController {
         emailField.delegate = self
         passwordField.delegate = self
         
+        fbLoginButton.delegate = self
         
         ///add subviews
         view.addSubview(scrollView)
@@ -104,6 +111,11 @@ class LoginViewController: UIViewController {
         scrollView.addSubview(emailField)
         scrollView.addSubview(passwordField)
         scrollView.addSubview(loginButton)
+        
+        //added code from FB for Facebook Button
+        
+        fbLoginButton.center = view.center
+        scrollView.addSubview(fbLoginButton)
     }
     
     override func viewDidLayoutSubviews() {
@@ -123,14 +135,19 @@ class LoginViewController: UIViewController {
         
         ///this is for laying out the element on the screen
         passwordField.frame = CGRect(x: 30,
-                                  y: emailField.bottom + 10,
-                                  width: scrollView.width - 60,
-                                  height: 52)
+                                     y: emailField.bottom + 10,
+                                     width: scrollView.width - 60,
+                                     height: 52)
         
         loginButton.frame = CGRect(x: 30,
-                                  y: passwordField.bottom + 10,
-                                  width: scrollView.width - 60,
-                                  height: 52)
+                                   y: passwordField.bottom + 10,
+                                   width: scrollView.width - 60,
+                                   height: 52)
+        
+        fbLoginButton.frame = CGRect(x: 30,
+                                     y: loginButton.bottom + 10,
+                                     width: scrollView.width - 60,
+                                     height: 52)
     }
     
     ///once the loginButton is tapped we will make some text validation
@@ -195,4 +212,77 @@ extension LoginViewController: UITextFieldDelegate {
         
         return true
     }
+}
+
+extension LoginViewController: LoginButtonDelegate {
+    
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginKit.FBLoginButton) {
+        //no action
+    }
+    
+    //delegate function from the FB button
+    func loginButton(_ loginButton: FBSDKLoginKit.FBLoginButton, didCompleteWith result: FBSDKLoginKit.LoginManagerLoginResult?, error: Error?) {
+        //unwrap the token from facebook
+        guard let token = result?.token?.tokenString else {
+            print("User failed to log in with facebook.")
+            return
+        }
+        //make a request object to FB to get the email and name from the logged in user
+        let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email, name"], tokenString: token, version: nil, httpMethod: .get)
+        
+        //execute that request
+        facebookRequest.start { _, result, error in
+            guard let result = result as? [String: Any], error == nil else {
+                print("Failed to make facebook graph request")
+                return
+            }
+            //unwrap that data
+            print("\(result)")
+            guard let userName = result["name"] as? String,
+                  let email = result["email"] as? String else {
+                print("Failed to get email and name from fb result")
+                return
+            }
+            
+            //decompose the name in first and last
+            let nameComponents = userName.components(separatedBy: " ")
+            guard nameComponents.count == 2 else {
+                return
+            }
+            
+            //assign to constant
+            let firstName = nameComponents[0]
+            let lastName = nameComponents[1]
+            
+            //check if the user exists
+            DatabaseManager.shared.userExists(with: email) { exists in
+                //if it doesn't exist we will insert into database
+                if !exists {
+                    DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName, lastName: lastName, emailAddress: email))
+                }
+            }
+            
+            let credential = FacebookAuthProvider.credential(withAccessToken: token)
+            
+            FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] authResult, error in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                guard authResult != nil, error == nil else {
+                    if let error = error {
+                        print("Facebook credential login failed, MFA may be needed - \(error).")
+                    }
+                    return
+                }
+                
+                print("Logged in with facebook")
+                strongSelf.navigationController?.dismiss(animated: true)
+            }
+            
+        }
+        
+    }
+    
+    
 }
