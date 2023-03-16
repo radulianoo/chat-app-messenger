@@ -11,6 +11,7 @@
 import UIKit
 import Firebase
 import FBSDKCoreKit
+import GoogleSignIn
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,6 +26,7 @@ func application(
         application,
         didFinishLaunchingWithOptions: launchOptions
     )
+    
 
     return true
 }
